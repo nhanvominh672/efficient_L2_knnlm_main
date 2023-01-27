@@ -9,14 +9,17 @@
 ##SBATCH --exclude=compute-0-31,compute-0-19,compute-0-15
 
 
-dstore_size=103225485
-pca=512
+dstore_size=3225485
+pca=(0 512 256 128 64)
 code_size=64
 keys=dstore/dstore_size${dstore_size}_embed1024_fp16_keys.npy
 vals=dstore/dstore_size${dstore_size}_embed1024_fp16_vals.npy
 # index_name=dstore/knn.103225485.pca${pca}.index
-index_name=dstore/knn.${dstore_size}.pca${pca}.m${code_size}.norotate.index
-
+#index_name=dstore/knn.${dstore_size}.pca${pca}.m${code_size}.norotate.index
+for idx in ${!pca[*]}
+do
+echo'pca ${pca[$idx]} '
+index_name=dstore/knn.${dstore_size}.pca${pca[$idx]}.m${code_size}.norotate.index
 python build_dstore.py \
     --dstore_keys ${keys} \
     --dstore_vals ${vals} \
@@ -25,5 +28,6 @@ python build_dstore.py \
     --num_keys_to_add_at_a_time 500000 \
     --starting_point 0 \
     --dstore_fp16 \
-    --pca ${pca} \
+    --pca ${pca[$idx]} \
     --code_size ${code_size}
+done
