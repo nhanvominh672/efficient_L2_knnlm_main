@@ -231,7 +231,11 @@ def main(parsed_args):
                 dstore_vals = np.memmap(args.dstore_mmap+f'_size{args.dstore_size}_embed{args.decoder_embed_dim}_fp32_vals.npy', dtype=np.int, mode='w+', shape=(args.dstore_size, 1))
 
         dstore_idx = 0
+        flag=0
         for ex_i, sample in enumerate(t):
+          if (flag==1):
+            break
+          else:
             if 'net_input' not in sample:
                 continue
 
@@ -257,6 +261,11 @@ def main(parsed_args):
                         if dstore_idx + shape[0] > args.dstore_size:
                             shape = [args.dstore_size - dstore_idx]
                             hypo['dstore_keys'] = hypo['dstore_keys'][:shape[0]]
+                        
+                        if dstore_idx+shape[0] >= args.dstore_size:
+                            print('much more than dstore size break')
+                            flag=1
+                            break
                         if args.dstore_fp16:
                             dstore_keys[dstore_idx:shape[0]+dstore_idx] = hypo['dstore_keys'][:shape[0]].view(
                                 -1, args.decoder_embed_dim).cpu().numpy().astype(np.float16)
@@ -269,6 +278,8 @@ def main(parsed_args):
                                 -1, 1).cpu().numpy().astype(np.int)
 
                         dstore_idx += shape[0]
+                        
+                        
                     else:
                         print('Skipping this one with shape', shape)
 
