@@ -10,7 +10,7 @@
 
 
 dstore_size=3225485
-pca=(0 512 256 128 64)
+pca=(0 512 256 128)
 code_size=64
 keys=dstore/dstore_size${dstore_size}_embed1024_fp16_keys.npy
 vals=dstore/dstore_size${dstore_size}_embed1024_fp16_vals.npy
