@@ -141,7 +141,7 @@ class KNN_Dstore(object):
         if self.drop_top1:
             dists = dists[:, 1:]
             knns = knns[:, 1:]
-
+        print(f'dists {dists} knn {self.knn}')
         return dists, knns
 
 
@@ -163,6 +163,7 @@ class KNN_Dstore(object):
                 # import pdb; pdb.set_trace()
                 if self.metric_type == 'l2':
                     start = time.time()
+                    print(f'recompute {d}')
                     # knns_vecs = torch.from_numpy(self.keys[k]).cuda().view(qsize[0], self.k, -1)
                     # import pdb; pdb.set_trace()
                     # if self.half:
@@ -179,6 +180,7 @@ class KNN_Dstore(object):
                     l2 = torch.sum(((query_vecs - knns_vecs).float())**2, dim=2)
                     l2 = l2.cuda()
                     return -1 * l2
+                print(f'just d {d}')    
                 return d
 
             if function == 'dot':
@@ -186,6 +188,7 @@ class KNN_Dstore(object):
                 return (torch.from_numpy(self.keys[k]).cuda() * q.view(qsize[0], 1, qsize[1])).sum(dim=-1)
 
             if function == 'do_not_recomp_l2':
+                print(f'do not recompute {d}')
                 return -1 * d
 
             raise ValueError("Invalid knn similarity function!")
