@@ -83,10 +83,11 @@ assert madvise(keys.ctypes.data, keys.size * keys.dtype.itemsize, 1) == 0, "MADV
 if not os.path.exists(args.train_index):
     # Initialize faiss index
     index_dim = args.pca if args.pca > 0 else args.dimension
-    quantizer = faiss.IndexFlatL2(index_dim)
-    index = faiss.IndexIVFPQ(quantizer, index_dim,
-        args.ncentroids, args.code_size, 8)
-    index.nprobe = args.probe
+    #quantizer = faiss.IndexFlatL2(index_dim)
+    #index = faiss.IndexIVFPQ(quantizer, index_dim,
+    #    args.ncentroids, args.code_size, 8)
+    index=faiss.index_factory(d, "OPQ32,IVF4096_HNSW,PQ32")
+    #index.nprobe = args.probe
 
     if args.pca > 0:
         pca_matrix = faiss.PCAMatrix(args.dimension, args.pca, 0, True)
