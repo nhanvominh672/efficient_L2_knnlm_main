@@ -86,7 +86,7 @@ if not os.path.exists(args.train_index):
     #quantizer = faiss.IndexFlatL2(index_dim)
     #index = faiss.IndexIVFPQ(quantizer, index_dim,
     #    args.ncentroids, args.code_size, 8)
-    index=faiss.index_factory(d, "OPQ32,IVF4096_HNSW,PQ32")
+    index=faiss.index_factory(args.dimension, "OPQ32,IVF4096_HNSW,PQ32")
     #index.nprobe = args.probe
 
     if args.pca > 0:
