@@ -141,7 +141,7 @@ class KNN_Dstore(object):
         if self.drop_top1:
             dists = dists[:, 1:]
             knns = knns[:, 1:]
-        print(f'dists {dists}')
+        #print(f'dists {dists}')
         return dists, knns
 
 
